@@ -1,0 +1,21 @@
+Sections:
+	.init       type:code align:4
+	extab       type:rodata align:32
+	extabindex  type:rodata align:32
+	.text       type:code align:32
+	.ctors      type:rodata align:32
+	.dtors      type:rodata align:16
+	.rodata     type:rodata align:64
+	.data       type:data align:4
+	.bss        type:bss align:32
+	.sdata      type:data align:32
+	.sbss       type:bss align:16
+	.sdata2     type:rodata align:16
+	.sbss2      type:bss align:16
+
+Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
+	.text       start:0x802C741C end:0x802C748C
+	.ctors      start:0x80383040 end:0x80383044 rename:.ctors$10
+	.dtors      start:0x80383180 end:0x80383184 rename:.dtors$10
+	.dtors      start:0x80383184 end:0x80383188 rename:.dtors$15
+	.sdata      start:0x80532B28 end:0x80532B30
