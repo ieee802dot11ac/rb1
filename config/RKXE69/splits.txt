@@ -13,7 +13,26 @@ Sections:
 	.sdata2     type:rodata align:16
 	.sbss2      type:bss align:16
 
-Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
+App.cpp:
+	.text       start:0x80006AA0 end:0x80007350
+
+system/utl/Str.cpp:
+	.text       start:0x802A20F0 end:0x802A2B6C
+
+sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/arith.c:
+	.text       start:0x802BAC98 end:0x802BACA8
+
+sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/buffer_io.c:
+	extab       start:0x80006570 end:0x80006578
+	extabindex  start:0x80006818 end:0x80006824
+	.text       start:0x802BACA8 end:0x802BAD88
+
+sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/mem.c:
+	extab       start:0x800065A0 end:0x800065A8
+	extabindex  start:0x80006860 end:0x8000686C
+	.text       start:0x802BB628 end:0x802BB798
+
+sdk/PowerPC_EABI_Support/Runtime/__init_cpp_exceptions.cpp:
 	.text       start:0x802C741C end:0x802C748C
 	.ctors      start:0x80383040 end:0x80383044 rename:.ctors$10
 	.dtors      start:0x80383180 end:0x80383184 rename:.dtors$10

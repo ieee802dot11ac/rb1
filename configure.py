@@ -188,15 +188,19 @@ cflags_base = [
     "-Cpp_exceptions off",
     # "-W all",
     "-O4,p",
-    "-inline auto",
+    "-inline noauto",
     '-pragma "cats off"',
     '-pragma "warn_notinlined off"',
     "-maxerrors 1",
     "-nosyspath",
+    "-gccinc",
     "-fp_contract on",
     "-str reuse",
     "-enc SJIS",  # For Wii compilers, replace with `-enc SJIS`
-    "-i include",
+    "-i src/",
+    "-i src/sdk/",
+    "-i src/sdk/PowerPC_EABI_Support/MSL/",
+    "-i src/sdk/PowerPC_EABI_Support/MSL/MSL_C/",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
@@ -214,13 +218,17 @@ cflags_runtime = [
     *cflags_base,
     "-use_lmw_stmw on",
     "-str reuse,pool,readonly",
-    "-gccinc",
     "-common off",
     "-inline auto",
 ]
 
-config.linker_version = "GC/3.0a5.2"
+cflags_system = [
+    *cflags_base,
+    "-i src/system/",
+    "-O4,s"
+]
 
+config.linker_version = "GC/3.0a5.2"
 
 # Helper function for Dolphin libraries
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
@@ -251,8 +259,28 @@ config.libs = [
         "cflags": cflags_runtime,
         "progress_category": "sdk",  # str | List[str]
         "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
+            Object(NonMatching, "sdk/PowerPC_EABI_Support/Runtime/global_destructor_chain.c"),
+            Object(NonMatching, "sdk/PowerPC_EABI_Support/Runtime/__init_cpp_exceptions.cpp"),
+        ],
+    },
+    {
+        "lib": "MSL",
+        "mw_version": config.linker_version,
+        "cflags": cflags_runtime,
+        "progress_category": "sdk",  # str | List[str]
+        "objects": [
+            Object(Matching, "sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/arith.c"),
+            Object(NonMatching, "sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/buffer_io.c"),
+            Object(NonMatching, "sdk/PowerPC_EABI_Support/MSL/MSL_C/MSL_Common/mem.c"),
+        ],
+    },
+    {
+        "lib": "system",
+        "mw_version": config.linker_version,
+        "cflags": cflags_system,
+        "progress_category": "engine",
+        "objects": [
+            Object(NonMatching, "system/utl/Str.cpp"),
         ],
     },
 ]
@@ -279,6 +307,8 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
 # Adjust as desired for your project
 config.progress_categories = [
     ProgressCategory("game", "Game Code"),
+    ProgressCategory("engine", "Milo Engine Code"),
+    ProgressCategory("lib", "Third-party Libraries"),
     ProgressCategory("sdk", "SDK Code"),
 ]
 config.progress_each_module = args.verbose
